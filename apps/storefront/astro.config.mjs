@@ -2,7 +2,6 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { defineConfig } from "astro/config";
-import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -23,7 +22,6 @@ export default defineConfig({
     inlineStylesheets: "always",
   },
   integrations: [
-    react(),
     sitemap({
       serialize(item) {
         if (item.url.includes("/products/")) {
@@ -39,7 +37,6 @@ export default defineConfig({
   ],
   vite: {
     resolve: {
-      dedupe: ["react", "react-dom"],
       alias: {
         "vazirmatn-font.css": vazirmatnCss,
         "@repo/cms/content/posts.json": path.join(cmsContent, "posts.json"),
@@ -47,16 +44,6 @@ export default defineConfig({
         "@repo/cms/content/media.json": path.join(cmsContent, "media.json"),
         "@repo/cms/content/products.json": path.join(cmsContent, "products.json"),
       },
-    },
-    optimizeDeps: {
-      include: [
-        "@astrojs/react/client.js",
-        "react",
-        "react/jsx-runtime",
-        "react/jsx-dev-runtime",
-        "react-dom",
-        "react-dom/client",
-      ],
     },
   },
 });

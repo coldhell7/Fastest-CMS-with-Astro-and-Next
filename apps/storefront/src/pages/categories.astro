@@ -1,0 +1,66 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import StoreHeader from "../components/store/StoreHeader.astro";
+import StoreFooter from "../components/store/StoreFooter.astro";
+import CategoryTile from "../components/store/CategoryTile.astro";
+import blocks from "../../../../packages/cms/content/homepage-blocks.json";
+
+const categoriesBlock = blocks.find((b) => b.type === "categories");
+const items = categoriesBlock?.data?.items ?? [];
+---
+
+<BaseLayout
+  title="دسته‌بندی محصولات"
+  description="همه دسته‌بندی‌های فروشگاه مدالینو — مکمل، مراقبت پوست، سلامت خانواده و تجهیزات پزشکی"
+  canonicalPath="/categories"
+>
+  <StoreHeader />
+
+  <main style="max-width:1200px;margin:0 auto;padding:var(--space-8) var(--space-4);">
+    <h1
+      style="font-size:var(--text-3xl);font-weight:900;margin:0 0 var(--space-2);color:var(--text);"
+    >
+      دسته‌بندی محصولات
+    </h1>
+    <p
+      style="margin:0 0 var(--space-8);color:var(--text-muted);font-size:var(--text-base);"
+    >
+      دسته‌های اصلی فروشگاه مدالینو را مرور کنید
+    </p>
+
+    <div class="grid">
+      {
+        items.map((cat) => (
+          <a
+            href={`/search?q=${encodeURIComponent(cat.title)}`}
+            aria-label={`مشاهده محصولات دسته ${cat.title}`}
+            style="text-decoration:none;color:inherit;display:block;"
+          >
+            <CategoryTile
+              title={cat.title}
+              subtitle={cat.subtitle}
+              hue={cat.hue}
+              gid={cat.gid}
+              coverImage={cat.coverImage}
+            />
+          </a>
+        ))
+      }
+    </div>
+  </main>
+
+  <StoreFooter />
+</BaseLayout>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-6);
+  }
+  @media (max-width: 640px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -4,6 +4,7 @@ export type BlockType =
   | "trust"
   | "categories"
   | "products"
+  | "promo_products"
   | "mid_banner"
   | "quotes"
   | "promo"
@@ -73,6 +74,7 @@ export type CmsProduct = {
   /** Long HTML for PDP (optional). */
   bodyHtml?: string;
   priceToman: number;
+  originalPriceToman?: number;
   badge?: string;
   image: string;
   imageAlt: string;

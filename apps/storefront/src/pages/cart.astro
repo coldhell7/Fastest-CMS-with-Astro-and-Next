@@ -1,0 +1,200 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import StoreHeader from "../components/store/StoreHeader.astro";
+import StoreFooter from "../components/store/StoreFooter.astro";
+import { getAdminUrl } from "../lib/admin-url";
+const adminUrl = getAdminUrl();
+---
+
+<BaseLayout title="سبد خرید | مدالینو" canonicalPath="/cart">
+  <StoreHeader />
+  <main style="max-width: 900px; margin: 0 auto; padding: var(--space-8) var(--space-4);" data-admin-url={adminUrl}>
+    <h1 style="font-size: var(--text-2xl); font-weight: 900; margin: 0 0 var(--space-6);">سبد خرید</h1>
+    <div id="cart-contents">
+      <p style="color: var(--text-muted);">در حال بارگذاری…</p>
+    </div>
+    <div id="checkout-form" style="display:none; margin-top: var(--space-8); border-top: 2px solid var(--border); padding-top: var(--space-6);">
+      <h2 style="font-size: var(--text-xl); font-weight: 700; margin: 0 0 var(--space-4);">اطلاعات ارسال</h2>
+      <div style="display: grid; gap: var(--space-4); grid-template-columns: 1fr 1fr;">
+        <label style="display: flex; flex-direction: column; gap: 4px; font-size: var(--text-sm); font-weight: 600;">
+          نام و نام خانوادگی
+          <input id="checkout-name" required style="padding: 10px 14px; border-radius: var(--radius-md); border: 1.5px solid var(--border); background: var(--bg); color: var(--text); font: inherit; font-size: var(--text-sm);" />
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 4px; font-size: var(--text-sm); font-weight: 600;">
+          شماره موبایل
+          <input id="checkout-phone" required type="tel" dir="ltr" style="padding: 10px 14px; border-radius: var(--radius-md); border: 1.5px solid var(--border); background: var(--bg); color: var(--text); font: inherit; font-size: var(--text-sm); font-family: monospace;" />
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 4px; font-size: var(--text-sm); font-weight: 600;">
+          شهر
+          <input id="checkout-city" required style="padding: 10px 14px; border-radius: var(--radius-md); border: 1.5px solid var(--border); background: var(--bg); color: var(--text); font: inherit; font-size: var(--text-sm);" />
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 4px; font-size: var(--text-sm); font-weight: 600;">
+          روش پرداخت
+          <select id="checkout-payment" style="padding: 10px 14px; border-radius: var(--radius-md); border: 1.5px solid var(--border); background: var(--bg); color: var(--text); font: inherit; font-size: var(--text-sm);">
+            <option value="درگاه بانکی">درگاه بانکی</option>
+            <option value="پرداخت در محل">پرداخت در محل</option>
+            <option value="کارت به کارت">کارت به کارت</option>
+          </select>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 4px; font-size: var(--text-sm); font-weight: 600; grid-column: 1 / -1;">
+          آدرس
+          <textarea id="checkout-address" required rows="2" style="padding: 10px 14px; border-radius: var(--radius-md); border: 1.5px solid var(--border); background: var(--bg); color: var(--text); font: inherit; font-size: var(--text-sm);"></textarea>
+        </label>
+      </div>
+      <button id="submit-order" type="button" style="margin-top: var(--space-6); padding: 14px 32px; border: none; border-radius: var(--radius-md); background: var(--accent); color: var(--accent-foreground); font: inherit; font-weight: 800; font-size: var(--text-base); cursor: pointer; width: 100%;">
+        ثبت سفارش
+      </button>
+      <p id="order-msg" style="margin-top: var(--space-3); font-size: var(--text-sm); text-align: center; display: none;"></p>
+    </div>
+  </main>
+  <StoreFooter />
+</BaseLayout>
+
+<script>
+  import { getCart, updateQuantity, removeFromCart, getCartTotal, clearCart } from "../lib/cart";
+
+  function renderCart() {
+    const container = document.getElementById("cart-contents");
+    if (!container) return;
+    const items = getCart();
+
+    if (items.length === 0) {
+      container.innerHTML = `<div style="text-align:center;padding:var(--space-8);"><p style="color:var(--text-muted);font-size:var(--text-lg);margin:0 0 var(--space-4);">سبد خرید شما خالی است.</p><a href="/" style="display:inline-block;padding:12px 24px;background:var(--accent);color:var(--accent-foreground);border-radius:var(--radius-md);text-decoration:none;font-weight:700;">بازگشت به فروشگاه</a></div>`;
+      document.getElementById("checkout-form")!.style.display = "none";
+      return;
+    }
+
+    document.getElementById("checkout-form")!.style.display = "block";
+    const total = getCartTotal();
+
+    let html = `<div style="overflow:auto;"><table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:1px solid var(--border);"><th style="padding:var(--space-3);text-align:start;color:var(--text-muted);font-size:var(--text-sm);">محصول</th><th style="padding:var(--space-3);text-align:center;color:var(--text-muted);font-size:var(--text-sm);">تعداد</th><th style="padding:var(--space-3);text-align:end;color:var(--text-muted);font-size:var(--text-sm);">قیمت</th><th style="padding:var(--space-3);"></th></tr></thead><tbody>`;
+
+    for (const item of items) {
+      const itemTotal = item.priceToman * item.quantity;
+      const origPrice = item.originalPriceToman && item.originalPriceToman > item.priceToman ? item.originalPriceToman : null;
+      html += `<tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:var(--space-3);display:flex;align-items:center;gap:var(--space-3);">
+          <img src="${item.image}" alt="" width="56" height="56" style="border-radius:var(--radius-sm);object-fit:cover;background:var(--bg-muted);" />
+          <div><a href="/products/${item.slug}" style="color:var(--text);text-decoration:none;font-weight:600;">${item.name}</a><br><span style="color:var(--text-muted);font-size:var(--text-xs);">${origPrice ? `<span style="text-decoration:line-through;margin-inline-end:4px;">${origPrice.toLocaleString("fa-IR")}</span>` : ""}${item.priceToman.toLocaleString("fa-IR")} تومان</span></div>
+        </td>
+        <td style="padding:var(--space-3);text-align:center;">
+          <div style="display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;">
+            <button class="qty-btn" data-slug="${item.slug}" data-delta="-1" style="border:none;background:var(--bg-muted);padding:6px 10px;cursor:pointer;font-size:var(--text-base);color:var(--text);">−</button>
+            <span style="padding:6px 12px;font-weight:700;min-width:32px;text-align:center;">${item.quantity}</span>
+            <button class="qty-btn" data-slug="${item.slug}" data-delta="1" style="border:none;background:var(--bg-muted);padding:6px 10px;cursor:pointer;font-size:var(--text-base);color:var(--text);">+</button>
+          </div>
+        </td>
+        <td style="padding:var(--space-3);text-align:end;font-weight:700;white-space:nowrap;">${origPrice ? `<span style="text-decoration:line-through;color:var(--text-muted);font-size:var(--text-sm);font-weight:400;margin-inline-end:6px;">${origPrice.toLocaleString("fa-IR")}</span>` : ""}${itemTotal.toLocaleString("fa-IR")} تومان</td>
+        <td style="padding:var(--space-3);"><button class="remove-btn" data-slug="${item.slug}" style="border:none;background:none;color:var(--danger);cursor:pointer;font-size:var(--text-sm);font-weight:600;">حذف</button></td>
+      </tr>`;
+    }
+
+    html += `</tbody></table></div>`;
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;margin-top:var(--space-6);padding-top:var(--space-4);border-top:2px solid var(--border);">
+      <div><button id="clear-cart-btn" style="border:1px solid var(--border);background:transparent;padding:10px 20px;border-radius:var(--radius-md);cursor:pointer;color:var(--text-muted);font:inherit;font-weight:600;">پاک کردن سبد</button></div>
+      <div style="text-align:end;"><span style="color:var(--text-muted);font-size:var(--text-sm);">جمع کل:</span><br><span style="font-size:var(--text-xl);font-weight:900;">${total.toLocaleString("fa-IR")} تومان</span></div>
+    </div>`;
+
+    container.innerHTML = html;
+
+    document.querySelectorAll(".qty-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const slug = btn.getAttribute("data-slug")!;
+        const delta = parseInt(btn.getAttribute("data-delta")!, 10);
+        const item = items.find((i) => i.slug === slug);
+        if (item) updateQuantity(slug, item.quantity + delta);
+        renderCart();
+        updateCartCount();
+      });
+    });
+
+    document.querySelectorAll(".remove-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        removeFromCart(btn.getAttribute("data-slug")!);
+        renderCart();
+        updateCartCount();
+      });
+    });
+
+    document.getElementById("clear-cart-btn")?.addEventListener("click", () => {
+      clearCart();
+      renderCart();
+      updateCartCount();
+    });
+  }
+
+  function updateCartCount() {
+    const countEl = document.getElementById("cart-count");
+    if (countEl) {
+      import("../lib/cart").then((m) => { countEl.textContent = String(m.getCartCount()); });
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    renderCart();
+
+    document.getElementById("submit-order")?.addEventListener("click", async () => {
+      const items = getCart();
+      if (items.length === 0) return;
+
+      const name = (document.getElementById("checkout-name") as HTMLInputElement).value.trim();
+      const phone = (document.getElementById("checkout-phone") as HTMLInputElement).value.trim();
+      const city = (document.getElementById("checkout-city") as HTMLInputElement).value.trim();
+      const address = (document.getElementById("checkout-address") as HTMLTextAreaElement).value.trim();
+      const payment = (document.getElementById("checkout-payment") as HTMLSelectElement).value;
+
+      if (!name || !phone || !city || !address) {
+        const msg = document.getElementById("order-msg")!;
+        msg.textContent = "لطفاً همه فیلدهای ضروری را پر کنید.";
+        msg.style.display = "block";
+        msg.style.color = "var(--danger)";
+        return;
+      }
+
+      const btn = document.getElementById("submit-order") as HTMLButtonElement;
+      btn.disabled = true;
+      btn.textContent = "در حال ثبت…";
+
+      try {
+        const adminUrl = document.querySelector("main")!.getAttribute("data-admin-url")!;
+        const res = await fetch(`${adminUrl}/api/orders-demo`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            customer_name: name,
+            customer_phone: phone,
+            shipping_city: city,
+            shipping_address: address,
+            payment_method: payment,
+            items: items.map((i) => ({
+              name: i.name,
+              sku: i.slug,
+              quantity: i.quantity,
+              unit_price_cents: i.priceToman * 100,
+            })),
+          }),
+        });
+        const j = await res.json();
+        if (!j.ok) throw new Error(j.message ?? "خطا");
+
+        clearCart();
+        renderCart();
+        updateCartCount();
+
+        const msg = document.getElementById("order-msg")!;
+        msg.textContent = `سفارش شما با موفقیت ثبت شد (کد: ${j.id}). به زودی با شما تماس می‌گیریم.`;
+        msg.style.display = "block";
+        msg.style.color = "var(--success)";
+        document.getElementById("checkout-form")!.style.display = "none";
+      } catch (e) {
+        const msg = document.getElementById("order-msg")!;
+        msg.textContent = e instanceof Error ? e.message : "خطا در ثبت سفارش";
+        msg.style.display = "block";
+        msg.style.color = "var(--danger)";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "ثبت سفارش";
+      }
+    });
+  });
+</script>

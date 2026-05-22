@@ -224,6 +224,13 @@ export function listDemoOrders(): DemoOrderRow[] {
   return rows.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 }
 
+export function pushDemoOrder(order: DemoOrderRow): void {
+  const orders = listDemoOrders();
+  orders.unshift(order);
+  const file = dataPath();
+  fs.writeFileSync(file, JSON.stringify(orders, null, 2), "utf8");
+}
+
 export function updateDemoOrderStatus(id: string, status: OrderStatus): DemoOrderRow | null {
   const orders = listDemoOrders();
   const idx = orders.findIndex((o) => o.id === id);

@@ -17,6 +17,10 @@ export function getFeaturedProducts(): CmsProduct[] {
   return getPublishedProducts().filter((p) => p.featured === true);
 }
 
+export function getDiscountedProducts(): CmsProduct[] {
+  return getPublishedProducts().filter((p) => !!p.originalPriceToman && p.originalPriceToman > p.priceToman);
+}
+
 /** Published catalog items (same source as CMS). */
 export const SAMPLE_PRODUCTS: CmsProduct[] = getPublishedProducts();
 

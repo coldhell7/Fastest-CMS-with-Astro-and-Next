@@ -145,10 +145,21 @@
     }
   },
   {
+    "id": "b5b",
+    "type": "promo_products",
+    "enabled": true,
+    "order": 6,
+    "data": {
+      "eyebrow": "فروش ویژه",
+      "title": "تخفیف‌های شگفت‌انگیز",
+      "subtitle": "محصولات دارای تخفیف ویژه با قیمت مناسب — زود سفارش بدید."
+    }
+  },
+  {
     "id": "b6",
     "type": "products",
     "enabled": true,
-    "order": 6,
+    "order": 7,
     "data": {
       "eyebrow": "ویژه",
       "title": "محصولات ویژه",
@@ -162,7 +173,7 @@
     "id": "b7",
     "type": "products",
     "enabled": true,
-    "order": 7,
+    "order": 8,
     "data": {
       "eyebrow": "پرفروش‌ها",
       "title": "منتخب محصولات",
@@ -176,7 +187,7 @@
     "id": "b8",
     "type": "media_press",
     "enabled": true,
-    "order": 8,
+    "order": 9,
     "data": {
       "eyebrow": "رسانه‌ها",
       "title": "دیده شدیم در",
@@ -213,7 +224,7 @@
     "id": "b9",
     "type": "quotes",
     "enabled": true,
-    "order": 9,
+    "order": 10,
     "data": {
       "title": "صدای خریداران",
       "items": [
@@ -236,7 +247,7 @@
     "id": "b10",
     "type": "promo",
     "enabled": true,
-    "order": 10,
+    "order": 11,
     "data": {
       "title": "باشگاه مشتریان مدالینو",
       "text": "با هر خرید امتیاز بگیرید؛ هدیه تولد، کوپن فصلی و دسترسی زودهنگام به حراج‌های ۲۴ ساعته.",

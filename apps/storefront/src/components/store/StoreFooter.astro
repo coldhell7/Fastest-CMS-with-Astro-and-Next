@@ -18,13 +18,13 @@ const adminUrl = getAdminUrl();
     </div>
     <div>
       <p style="margin:0 0 var(--space-3);font-weight:800;color:#fff;">خرید</p>
-      <ul style="margin:0;padding:0;list-style:none;display:grid;gap:10px;color:#cbd5e1;font-size:var(--text-sm);">
-        <li><a href="#featured" style="color:inherit;text-decoration:none;">پرفروش‌ها</a></li>
-        <li><a href="/blog" style="color:inherit;text-decoration:none;">مجله سلامت</a></li>
-        <li><a href="/p/about" style="color:inherit;text-decoration:none;">دربارهٔ ما</a></li>
-        <li><a href="/p/contact" style="color:inherit;text-decoration:none;">تماس</a></li>
+      <ul style="margin:0;padding:0;list-style:none;display:grid;gap:10px;font-size:var(--text-sm);">
+        <li><a href="#featured" style="color:#cbd5e1;text-decoration:none;font-weight:600;" class="footer-link">پرفروش‌ها</a></li>
+        <li><a href="/blog" style="color:#cbd5e1;text-decoration:none;font-weight:600;" class="footer-link">مجله سلامت</a></li>
+        <li><a href="/p/about" style="color:#cbd5e1;text-decoration:none;font-weight:600;" class="footer-link">دربارهٔ ما</a></li>
+        <li><a href="/p/contact" style="color:#cbd5e1;text-decoration:none;font-weight:600;" class="footer-link">تماس</a></li>
         <li><span style="opacity:0.85;">پیگیری سفارش (به‌زودی)</span></li>
-        <li><a href={adminUrl} target="_blank" rel="noopener noreferrer" style="color:#38bdf8;text-decoration:none;font-weight:700;">ورود به پنل مدیریت</a></li>
+        <li><a href={adminUrl} target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:8px 16px;border-radius:10px;background:#38bdf8;color:#0b1220;text-decoration:none;font-weight:800;font-size:var(--text-xs);">ورود به پنل مدیریت</a></li>
       </ul>
     </div>
     <div>
@@ -55,3 +55,7 @@ const adminUrl = getAdminUrl();
     © {year} مدالینو — نمونه رابط فروشگاهی؛ پیش از خرید دارویی با داروساز مشورت کنید.
   </div>
 </footer>
+
+<style>
+  .footer-link:hover { color: #fff !important; }
+</style>
