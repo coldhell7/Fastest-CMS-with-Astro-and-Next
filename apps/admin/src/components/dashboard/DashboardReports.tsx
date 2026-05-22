@@ -40,8 +40,9 @@ const tooltipStyle = {
   borderRadius: 8,
 };
 
-function formatToman(cents: number): string {
-  return `${Math.round(cents / 100).toLocaleString("fa-IR")} تومان`;
+function formatToman(cents: number, hydrated: boolean): string {
+  const toman = Math.round(cents / 100);
+  return hydrated ? `${toman.toLocaleString("fa-IR")} تومان` : `${toman} تومان`;
 }
 
 function dwellBarWidth(seconds: number, max: number): string {
@@ -49,6 +50,7 @@ function dwellBarWidth(seconds: number, max: number): string {
 }
 
 export function DashboardReports({ dbOrderCount }: { dbOrderCount: number | null }) {
+  const [hydrated, setHydrated] = useState(false);
   const analytics = useMemo(() => getDashboardAnalytics(), []);
   const maxDwell = useMemo(
     () => Math.max(...analytics.pageDwell.map((p) => p.avgSeconds), 1),
@@ -58,6 +60,7 @@ export function DashboardReports({ dbOrderCount }: { dbOrderCount: number | null
   const [orders, setOrders] = useState<OrderRow[]>([]);
 
   useEffect(() => {
+    setHydrated(true);
     void (async () => {
       try {
         const res = await fetch("/api/orders-demo", { cache: "no-store" });
@@ -85,6 +88,8 @@ export function DashboardReports({ dbOrderCount }: { dbOrderCount: number | null
     };
   }, [orders]);
 
+  const fmt = (n: number) => hydrated ? n.toLocaleString("fa-IR") : String(n);
+
   return (
     <div className="flex flex-col gap-6">
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -99,8 +104,8 @@ export function DashboardReports({ dbOrderCount }: { dbOrderCount: number | null
           },
           {
             label: "بازدیدکننده یکتا",
-            value: analytics.uniqueVisitors.toLocaleString("fa-IR"),
-            hint: `نرخ پرش ${analytics.bounceRate.toLocaleString("fa-IR")}٪`,
+            value: fmt(analytics.uniqueVisitors),
+            hint: `نرخ پرش ${fmt(analytics.bounceRate)}٪`,
             raw: true,
           },
         ].map((k) => (
@@ -113,7 +118,7 @@ export function DashboardReports({ dbOrderCount }: { dbOrderCount: number | null
               {k.label}
             </p>
             <p className="mt-2 text-2xl font-black" style={{ color: "var(--accent)" }}>
-              {k.raw ? k.value : (k.value as number).toLocaleString("fa-IR")}
+              {k.raw ? k.value : fmt(k.value as number)}
             </p>
             <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>
               {k.hint}
@@ -180,7 +185,7 @@ export function DashboardReports({ dbOrderCount }: { dbOrderCount: number | null
                 </div>
                 <div className="mt-1 flex justify-between text-xs" style={{ color: "var(--text-muted)" }}>
                   <span>{formatDuration(p.avgSeconds)}</span>
-                  <span>{p.views.toLocaleString("fa-IR")} بازدید</span>
+                  <span>{fmt(p.views)} بازدید</span>
                 </div>
               </li>
             ))}
@@ -205,7 +210,7 @@ export function DashboardReports({ dbOrderCount }: { dbOrderCount: number | null
               </span>
               <span className="text-sm font-bold">{j.to}</span>
               <span className="text-xs font-bold sm:text-end" style={{ color: "var(--text-muted)" }}>
-                {j.users.toLocaleString("fa-IR")} نفر ({j.pct.toLocaleString("fa-IR")}٪)
+                {fmt(j.users)} نفر ({fmt(j.pct)}٪)
               </span>
             </div>
           ))}
@@ -219,20 +224,20 @@ export function DashboardReports({ dbOrderCount }: { dbOrderCount: number | null
               <p className="text-xs" style={{ color: "var(--text-muted)" }}>
                 سفارش (نمونه محلی)
               </p>
-              <p className="text-2xl font-black">{orderStats.total.toLocaleString("fa-IR")}</p>
+              <p className="text-2xl font-black">{fmt(orderStats.total)}</p>
             </div>
             <div className="rounded-lg border p-3" style={{ borderColor: "var(--border)" }}>
               <p className="text-xs" style={{ color: "var(--text-muted)" }}>
                 درآمد تقریبی
               </p>
-              <p className="text-lg font-black">{formatToman(orderStats.revenue)}</p>
+              <p className="text-lg font-black">{formatToman(orderStats.revenue, hydrated)}</p>
             </div>
             {dbOrderCount !== null ? (
               <div className="col-span-2 rounded-lg border p-3" style={{ borderColor: "var(--border)" }}>
                 <p className="text-xs" style={{ color: "var(--text-muted)" }}>
                   پایگاه داده (Drizzle)
                 </p>
-                <p className="text-xl font-black">{dbOrderCount.toLocaleString("fa-IR")} ردیف</p>
+                  <p className="text-xl font-black">{fmt(dbOrderCount)} ردیف</p>
               </div>
             ) : null}
           </div>
@@ -244,7 +249,7 @@ export function DashboardReports({ dbOrderCount }: { dbOrderCount: number | null
                   className="rounded-full border px-2 py-0.5 text-xs font-bold"
                   style={{ borderColor: "var(--border)" }}
                 >
-                  {statusLabelFa(s)}: {(orderStats.byStatus[s] ?? 0).toLocaleString("fa-IR")}
+                  {statusLabelFa(s)}: {fmt(orderStats.byStatus[s] ?? 0)}
                 </span>
               ),
             )}
@@ -273,7 +278,7 @@ export function DashboardReports({ dbOrderCount }: { dbOrderCount: number | null
                   </p>
                 </div>
                 <div className="text-end">
-                  <p className="font-bold">{formatToman(o.total_cents)}</p>
+                  <p className="font-bold">{formatToman(o.total_cents, hydrated)}</p>
                   <p className="text-xs" style={{ color: "var(--text-muted)" }}>
                     {statusLabelFa(normalizeStatus(o.status))}
                   </p>

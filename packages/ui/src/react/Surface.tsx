@@ -14,9 +14,12 @@ export function Surface({
       style={{
         borderRadius: "var(--radius-lg)",
         border: "1px solid var(--border)",
-        background: "var(--surface)",
+        background: "var(--glass-bg)",
+        backdropFilter: `blur(var(--blur-sm))`,
+        WebkitBackdropFilter: `blur(var(--blur-sm))`,
         boxShadow: "var(--shadow-1)",
         padding: "var(--space-6)",
+        transition: "all var(--transition-fast)",
       }}
     >
       {title ? (

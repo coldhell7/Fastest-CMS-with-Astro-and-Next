@@ -68,6 +68,11 @@ export default function OrdersPage() {
 
   const [orders, setOrders] = useState<OrderView[]>([]);
   const [status, setStatus] = useState<string>("idle");
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => { setHydrated(true); }, []);
+
+  const fmt = (n: number) => hydrated ? n.toLocaleString("fa-IR") : String(n);
   const [mode, setMode] = useState<LoadMode>("idle");
   const [filter, setFilter] = useState<FilterKey>("all");
   const [advancingId, setAdvancingId] = useState<string | null>(null);
@@ -208,7 +213,7 @@ export default function OrdersPage() {
               {s.label}
             </p>
             <p className="mt-1 text-2xl font-black" style={{ color: s.color }}>
-              {s.value.toLocaleString("fa-IR")}
+              {fmt(s.value)}
             </p>
           </div>
         ))}
@@ -240,7 +245,7 @@ export default function OrdersPage() {
                 }}
               >
                 {f.label}
-                <span className="mr-1 opacity-80">({count.toLocaleString("fa-IR")})</span>
+                <span className="mr-1 opacity-80">({fmt(count)})</span>
               </button>
             );
           })}

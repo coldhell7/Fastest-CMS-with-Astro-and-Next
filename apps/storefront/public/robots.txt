@@ -6,4 +6,3 @@ Disallow: /_astro/
 Disallow: /cdn-cgi/
 
 Sitemap: https://medalino.ir/sitemap-index.xml
-Sitemap: https://medalino.ir/sitemap.xml

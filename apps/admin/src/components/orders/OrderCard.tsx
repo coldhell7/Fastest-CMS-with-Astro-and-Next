@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { formatJalaliDate } from "@repo/shared";
 import {
   nextPipelineStatus,
@@ -30,10 +31,6 @@ export type OrderView = {
   source: "demo" | "supabase";
 };
 
-function formatAmountToman(totalCents: number): string {
-  return `${Math.round(totalCents / 100).toLocaleString("fa-IR")} تومان`;
-}
-
 function itemLineTotal(item: OrderLineItem): number {
   return item.unit_price_cents * item.quantity;
 }
@@ -60,6 +57,9 @@ type Props = {
 };
 
 export function OrderCard({ order, onAdvance, advancing }: Props) {
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => { setHydrated(true); }, []);
+  const fmt = (n: number) => hydrated ? n.toLocaleString("fa-IR") : String(n);
   const status = normalizeStatus(order.status);
   const next = nextPipelineStatus(status);
   const rich = order.source === "demo" && order.items && order.items.length > 0;
@@ -94,7 +94,7 @@ export function OrderCard({ order, onAdvance, advancing }: Props) {
           </p>
         </div>
         <p className="text-lg font-black" style={{ color: "var(--accent)" }}>
-          {formatAmountToman(order.total_cents)}
+          {fmt(Math.round(order.total_cents / 100))} تومان
         </p>
       </header>
 
@@ -234,11 +234,11 @@ export function OrderCard({ order, onAdvance, advancing }: Props) {
                   <span>
                     {item.name}
                     <span className="mr-1 text-xs" style={{ color: "var(--text-muted)" }}>
-                      ×{item.quantity.toLocaleString("fa-IR")}
+                      ×{fmt(item.quantity)}
                     </span>
                   </span>
                   <span className="shrink-0 font-bold">
-                    {formatAmountToman(itemLineTotal(item))}
+                    {fmt(Math.round(itemLineTotal(item) / 100))} تومان
                   </span>
                 </li>
               ))}

@@ -24,6 +24,11 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState<string | null>(null);
   const [filter, setFilter] = useState<RoleFilter>("all");
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => { setHydrated(true); }, []);
+
+  const fmt = (n: number) => hydrated ? n.toLocaleString("fa-IR") : String(n);
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -130,7 +135,7 @@ export default function UsersPage() {
             <p className="text-xs font-bold" style={{ color: "var(--text-muted)" }}>
               {s.label}
             </p>
-            <p className="mt-1 text-2xl font-black">{s.count.toLocaleString("fa-IR")}</p>
+            <p className="mt-1 text-2xl font-black">{fmt(s.count)}</p>
           </button>
         ))}
       </div>
@@ -237,7 +242,7 @@ export default function UsersPage() {
                       </span>
                     </td>
                     <td className="py-3">
-                      {u.role === "customer" ? u.orders_count.toLocaleString("fa-IR") : "—"}
+                      {u.role === "customer" ? fmt(u.orders_count) : "—"}
                     </td>
                     <td className="py-3 text-xs" style={{ color: "var(--text-muted)" }}>
                       {formatJalaliDate(u.created_at, { time: true })}

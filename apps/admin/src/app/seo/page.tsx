@@ -460,6 +460,10 @@ function KeywordsTab() {
   const [keywords, setKeywords] = useState<KeywordResult[]>([]);
   const [totalWords, setTotalWords] = useState(0);
   const [error, setError] = useState("");
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => { setHydrated(true); }, []);
+  const fmt = (n: number) => hydrated ? n.toLocaleString("fa-IR") : String(n);
 
   const analyze = useCallback(async () => {
     setLoading(true); setError(""); setKeywords([]);
@@ -504,7 +508,7 @@ function KeywordsTab() {
         <div className="rounded-md border p-4" style={card}>
           <div className="mb-3 flex items-center justify-between">
             <h3 className="text-lg font-semibold" style={{ color: "var(--text)" }}>نتایج ({keywords.length} کلمه)</h3>
-            <span className="text-sm" style={{ color: "var(--text-muted)" }}>مجموع کلمات: {totalWords.toLocaleString("fa-IR")}</span>
+            <span className="text-sm" style={{ color: "var(--text-muted)" }}>مجموع کلمات: {fmt(totalWords)}</span>
           </div>
           <div className="overflow-auto rounded-md border" style={{ borderColor: "var(--border)" }}>
             <table className="w-full text-sm">
