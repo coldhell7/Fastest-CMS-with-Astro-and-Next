@@ -1,6 +1,9 @@
 ---
 import "vazirmatn-font.css";
 import "@repo/ui/tokens.css";
+import vazirmatnArabic from "@fontsource-variable/vazirmatn/files/vazirmatn-arabic-wght-normal.woff2?url";
+import vazirmatnLatinExt from "@fontsource-variable/vazirmatn/files/vazirmatn-latin-ext-wght-normal.woff2?url";
+import vazirmatnLatin from "@fontsource-variable/vazirmatn/files/vazirmatn-latin-wght-normal.woff2?url";
 import JsonLd from "../components/JsonLd.astro";
 import type { MedicalWebPage, WithContext } from "schema-dts";
 import { getSiteSettings, getSeoSettings, applyMetaTemplate } from "../lib/site-settings";
@@ -106,6 +109,10 @@ const structuredData = seo.structuredDataEnabled ? [
     {seo.twitterCreator && <meta name="twitter:creator" content={seo.twitterCreator} />}
     {seo.fbAppId && <meta property="fb:app_id" content={seo.fbAppId} />}
     <meta name="generator" content={Astro.generator} />
+    <link rel="preload" href={vazirmatnArabic} as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href={vazirmatnLatinExt} as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href={vazirmatnLatin} as="font" type="font/woff2" crossorigin="anonymous" />
+    <slot name="head" />
     {structuredData.map((doc) => (
       <JsonLd data={doc} />
     ))}

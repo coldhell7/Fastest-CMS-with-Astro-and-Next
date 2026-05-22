@@ -1,9 +1,6 @@
 ---
-import CartIsland from "../../islands/CartIsland";
-import { getAdminUrl } from "../../lib/admin-url";
 import { getSiteSettings } from "../../lib/site-settings";
 
-const adminUrl = getAdminUrl();
 const settings = getSiteSettings();
 ---
 
@@ -37,15 +34,11 @@ const settings = getSiteSettings();
       <a href="/blog" style="color:var(--text-muted);text-decoration:none;font-size:var(--text-sm);font-weight:600;">مجله سلامت</a>
       <a href="/p/about" style="color:var(--text-muted);text-decoration:none;font-size:var(--text-sm);font-weight:600;">درباره</a>
       <a href="/p/contact" style="color:var(--text-muted);text-decoration:none;font-size:var(--text-sm);font-weight:600;">تماس</a>
-      <a
-        href={adminUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        style="color:var(--accent);text-decoration:none;font-size:var(--text-sm);font-weight:800;border:1px solid var(--border);padding:8px 14px;border-radius:999px;background:var(--bg);"
+      <span
+        style="border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-muted);padding:10px 14px;font-weight:600;font-family:var(--font-sans);display:inline-block;color:var(--text-muted);user-select:none;"
       >
-        ورود به پنل
-      </a>
-      <CartIsland client:load />
+        سبد (0)
+      </span>
     </nav>
   </div>
 </header>

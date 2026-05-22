@@ -1,9 +1,11 @@
 ---
 import { formatJalaliYear } from "@repo/shared";
+import { getAdminUrl } from "../../lib/admin-url";
 import { getSiteSettings } from "../../lib/site-settings";
 
 const year = formatJalaliYear();
 const settings = getSiteSettings();
+const adminUrl = getAdminUrl();
 ---
 
 <footer style="background:#0f172a;color:#e2e8f0;margin-top:var(--space-8);padding:var(--space-8) var(--space-4);">
@@ -22,6 +24,7 @@ const settings = getSiteSettings();
         <li><a href="/p/about" style="color:inherit;text-decoration:none;">دربارهٔ ما</a></li>
         <li><a href="/p/contact" style="color:inherit;text-decoration:none;">تماس</a></li>
         <li><span style="opacity:0.85;">پیگیری سفارش (به‌زودی)</span></li>
+        <li><a href={adminUrl} target="_blank" rel="noopener noreferrer" style="color:#38bdf8;text-decoration:none;font-weight:700;">ورود به پنل مدیریت</a></li>
       </ul>
     </div>
     <div>
