@@ -13,7 +13,7 @@ export async function GET() {
   try {
     const products = readProducts();
     const published = products.filter((p) => p.status === "publish");
-    const baseUrl = process.env.NEXT_PUBLIC_STOREFRONT_URL ?? "http://localhost:4321";
+    const baseUrl = process.env.NEXT_PUBLIC_STOREFRONT_URL ?? "https://medalino.ir";
 
     const urls = [
       { path: "/", changefreq: "daily", priority: "1.0" },

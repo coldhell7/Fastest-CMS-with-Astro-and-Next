@@ -207,7 +207,7 @@ function Btn({ children, onClick, disabled, variant = "primary" }: { children: R
 
 type TabId = "overview" | "analyzer" | "settings" | "sitemap" | "robots" | "indexing" | "audit" | "keywords" | "ogpreview" | "webp";
 
-const STOREFRONT_URL = process.env.NEXT_PUBLIC_STOREFRONT_URL ?? "http://localhost:4321";
+const STOREFRONT_URL = process.env.NEXT_PUBLIC_STOREFRONT_URL ?? "https://medalino.ir";
 
 const QUICK_PAGES = [
   { label: "صفحه اصلی", path: "/" },
@@ -233,7 +233,7 @@ export default function SeoPage() {
     { id: "settings", label: "تنظیمات" },
     { id: "sitemap", label: "Sitemap" },
     { id: "robots", label: "Robots.txt" },
-    { id: "indexing", label: "اینکسینگ" },
+    { id: "indexing", label: "ایندکسینگ" },
     { id: "audit", label: "بررسی سریع" },
   ];
 
@@ -323,7 +323,7 @@ function OverviewTab({ settings, onTabChange }: { settings: SeoSettings | null; 
     { tab: "settings", title: "تنظیمات سئو", desc: "قالب متا، Open Graph و شبکه‌های اجتماعی" },
     { tab: "sitemap", title: "نقشه سایت", desc: "مشاهده و مدیریت sitemap.xml" },
     { tab: "robots", title: "Robots.txt", desc: "مدیریت دسترسی ربات‌های جستجو" },
-    { tab: "indexing", title: "اینکسینگ", desc: "ارسال URL به Google Indexing API" },
+    { tab: "indexing", title: "ایندکسینگ", desc: "ارسال URL به Google Indexing API" },
     { tab: "audit", title: "بررسی سریع", desc: "بررسی دسته‌جمعی صفحات اصلی" },
   ];
 

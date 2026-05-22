@@ -15,7 +15,7 @@ const vazirmatnCss = path.join(
 );
 
 export default defineConfig({
-  site: process.env.PUBLIC_SITE_URL ?? "https://localhost:4321",
+  site: process.env.PUBLIC_SITE_URL ?? "https://medalino.ir",
   devToolbar: {
     enabled: false,
   },

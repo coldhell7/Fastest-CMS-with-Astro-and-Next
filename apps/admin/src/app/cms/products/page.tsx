@@ -5,7 +5,7 @@ import { useEffect, useState, useMemo } from "react";
 import { Surface } from "@repo/ui/react";
 import type { CmsProduct } from "@repo/cms/types";
 
-const storefrontUrl = "http://localhost:4321";
+const storefrontUrl = "https://medalino.ir";
 
 export default function CmsProductsListPage() {
   const [products, setProducts] = useState<CmsProduct[]>([]);
