@@ -7,7 +7,7 @@ const settings = getSiteSettings();
 <header class="store-header">
   <div class="store-header__inner">
     <a href="/" class="store-header__logo">{settings.siteName}</a>
-    <form class="search-form" role="search" aria-label="جستجوی محصول" onsubmit="event.preventDefault();">
+    <form class="search-form" role="search" aria-label="جستجوی محصول" id="search-form">
       <input class="search-form__input" type="search" name="q" placeholder="دارو، مکمل، تجهیزات پزشکی…" />
       <button class="search-form__btn" type="submit">جستجو</button>
     </form>
@@ -28,6 +28,15 @@ const settings = getSiteSettings();
   import { getCartCount } from "../../lib/cart";
   const countEl = document.getElementById("cart-count");
   if (countEl) countEl.textContent = String(getCartCount());
+  const searchForm = document.getElementById("search-form");
+  if (searchForm) {
+    searchForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const input = searchForm.querySelector<HTMLInputElement>("input[name=q]");
+      const q = input?.value?.trim();
+      if (q) window.location.href = `/search?q=${encodeURIComponent(q)}`;
+    });
+  }
 </script>
 
 <style>

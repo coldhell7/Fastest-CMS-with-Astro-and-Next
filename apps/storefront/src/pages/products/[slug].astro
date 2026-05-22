@@ -178,6 +178,11 @@ const webPage: WithContext<WebPage> = {
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
           <button
             type="button"
+            id="pdp-add-to-cart"
+            data-slug={p.slug}
+            data-name={p.name}
+            data-image={p.image}
+            data-price={p.priceToman}
             style="border:none;border-radius:14px;padding:14px 22px;background:var(--accent);color:var(--accent-foreground);font-weight:900;font:inherit;cursor:pointer;"
           >
             افزودن به سبد
@@ -219,3 +224,22 @@ const webPage: WithContext<WebPage> = {
     }
   }
 </style>
+
+<script>
+  import { addToCart, getCartCount } from "../../lib/cart";
+  const btn = document.getElementById("pdp-add-to-cart");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      addToCart({
+        slug: btn.getAttribute("data-slug")!,
+        name: btn.getAttribute("data-name")!,
+        image: btn.getAttribute("data-image")!,
+        priceToman: Number(btn.getAttribute("data-price")),
+      });
+      btn.textContent = "✓ اضافه شد";
+      setTimeout(() => { btn.textContent = "افزودن به سبد"; }, 1500);
+      const countEl = document.getElementById("cart-count");
+      if (countEl) countEl.textContent = String(getCartCount());
+    });
+  }
+</script>
